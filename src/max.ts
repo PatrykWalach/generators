@@ -1,24 +1,11 @@
-import { all } from './all'
 import { iter, next } from './iter'
 import { sorted } from './sorted'
-import { zip } from './zip'
-import { map } from './map'
-import { filter } from './filter'
-
-export function isIterable(t: any): t is Iterable<unknown> {
-  if (t == null) {
-    return false
-  }
-  return t[Symbol.iterator] === 'function'
-}
 
 export function compare(a: unknown, b: unknown): number {
   if (typeof a === 'string' && typeof b === 'string') {
     return a.localeCompare(b)
   }
-  // if (typeof a === 'number' && typeof b === 'number') {
-  //   return a - b
-  // }
+  
   if (
     (typeof a === 'bigint' || typeof a === 'number') &&
     (typeof b === 'bigint' || typeof b === 'number')

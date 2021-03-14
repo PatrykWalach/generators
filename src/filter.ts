@@ -1,4 +1,3 @@
-import { F } from 'ts-toolbelt'
 
 export function filter<T, R extends T>(
   it: Iterable<T>,

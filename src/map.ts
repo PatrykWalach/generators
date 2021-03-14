@@ -1,4 +1,3 @@
-import { U, L, F } from 'ts-toolbelt'
 import { iter, next } from './iter'
 
 export type M<T> = T extends Iterable<infer K> ? K : unknown

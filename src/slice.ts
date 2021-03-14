@@ -1,9 +1,5 @@
-import { filter } from './filter'
-import { iter } from './iter'
-import { len } from './len'
-import { map } from './map'
 import { range } from './range'
-import { FiniteGenerator, FiniteIterable, zip } from './zip'
+import { FiniteGenerator, FiniteIterable } from './zip'
 
 const _slice = FiniteGenerator.from(function* <T>(
   itble: { [key: number]: T } & FiniteIterable<T>,
