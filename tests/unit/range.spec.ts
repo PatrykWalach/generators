@@ -1,4 +1,4 @@
-import { range, ValueError } from '../../src/range'
+import { range, ValueError } from '../../src'
 
 describe('range', () => {
   it('infinite', () => {

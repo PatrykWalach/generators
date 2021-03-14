@@ -1,4 +1,4 @@
-import { max } from '../../src/max'
+import { max } from '../../src'
 
 describe('max()', () => {
   it('array', () => {

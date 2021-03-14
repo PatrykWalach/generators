@@ -1,5 +1,5 @@
-import { len } from '../../src/len'
-import { range } from '../../src/range'
+import { len } from '../../src'
+import { range } from '../../src'
 
 describe('len', () => {
   it('works with array', () => {

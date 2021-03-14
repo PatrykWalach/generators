@@ -1,4 +1,4 @@
-import { zip } from '../../src/zip'
+import { zip } from '../../src'
 
 describe('zip', () => {
   it('right longer', () => {

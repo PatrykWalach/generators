@@ -1,4 +1,4 @@
-import { all } from '../../src/all'
+import { all } from '../../src'
 
 describe('all()', () => {
   describe('for arrays', () => {

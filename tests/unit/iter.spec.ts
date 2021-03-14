@@ -1,4 +1,4 @@
-import { iter, next } from '../../src/iter'
+import { iter, next } from '../../src'
 
 describe('iter', () => {
   it('for array', () => {

@@ -1,5 +1,5 @@
-import { compare } from '../../src/max'
-import { sorted } from '../../src/sorted'
+import { compare } from '../../src'
+import { sorted } from '../../src'
 
 describe('sorted()', () => {
   it('string', () => {

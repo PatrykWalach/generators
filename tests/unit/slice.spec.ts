@@ -1,4 +1,4 @@
-import { slice } from '../../src/slice'
+import { slice } from '../../src'
 
 describe('slice()', () => {
   it('negative', () => {

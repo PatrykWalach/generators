@@ -1,4 +1,4 @@
-import { compare } from '../../src/max'
+import { compare } from '../../src'
 
 describe('util', () => {
   describe('compare()', () => {

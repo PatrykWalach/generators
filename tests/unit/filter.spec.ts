@@ -1,4 +1,4 @@
-import { filter } from '../../src/filter'
+import { filter } from '../../src'
 
 describe('filter', () => {
   it('filters', () => {

@@ -1,4 +1,4 @@
-import { map } from '../../src/map'
+import { map } from '../../src'
 
 describe('map()', () => {
   it('array', () => {
