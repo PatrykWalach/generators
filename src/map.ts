@@ -2,15 +2,18 @@ import { iter, next } from './iter'
 
 export type M<T> = T extends Iterable<infer K> ? K : unknown
 
+export type F<T extends any[], R> = (
+  ...vs: {
+    [K in keyof T]: M<T[K]>
+  }
+) => R
+
 export function* map<T extends Iterable<unknown>[], R>(
-  fn: (
-    ...vs: {
-      [K in keyof T]: M<T[K]>
-    }
-  ) => R,
-  ...itbles: T
+  ...itbles: [...T, F<T, R>]
 ) {
-  const its = itbles.map((itble) => iter(itble))
+  const fn = itbles.pop() as F<T, R>
+
+  const its = ((itbles as unknown) as T).map((itble) => iter(itble))
   let values = its.map(next)
 
   while (values.every((v) => v !== undefined)) {
@@ -22,3 +25,24 @@ export function* map<T extends Iterable<unknown>[], R>(
     values = its.map(next)
   }
 }
+
+// export function* map<T extends Iterable<unknown>[], R>(
+//   fn: (
+//     ...vs: {
+//       [K in keyof T]: M<T[K]>
+//     }
+//   ) => R,
+//   ...itbles: T
+// ) {
+//   const its = itbles.map((itble) => iter(itble))
+//   let values = its.map(next)
+
+//   while (values.every((v) => v !== undefined)) {
+//     yield fn(
+//       ...(values as {
+//         [K in keyof T]: M<T[K]>
+//       }),
+//     )
+//     values = its.map(next)
+//   }
+// }

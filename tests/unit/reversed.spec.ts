@@ -11,4 +11,8 @@ describe('reversed()', () => {
       12,
     ])
   })
+
+  it('reverses range', () => {
+    expect([...reversed(range(3))]).toMatchObject([2, 1, 0])
+  })
 })

@@ -17,4 +17,8 @@ describe('len', () => {
     expect(len(range(last))).toStrictEqual(last)
   })
 
+  it('works with range with steps', () => {
+    const last = 7
+    expect(len(range(0, last, 3))).toStrictEqual(3)
+  })
 })

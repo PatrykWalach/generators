@@ -1,36 +1,44 @@
-import { FiniteGenerator } from './zip'
+import { FiniteIterable } from './zip'
 
-const _range = FiniteGenerator.from(function* (
-  start: number,
-  stop: number,
-  step: number,
-) {
-  if (step < 0) {
-    for (let i = start; i > stop; i += step) {
-      yield i
+class _range implements FiniteIterable<number> {
+  length: number = 0;
+  [key: number]: number
+
+  constructor(start: number, stop: number, step: number) {
+    this.length = Math.ceil((stop - start) / step)
+
+    for (let i = 0; i < this.length; i++) {
+      Object.defineProperty(this, i, {
+        get() {
+          return start + step * i
+        },
+      })
     }
-    return
   }
 
-  for (let i = start; i < stop; i += step) {
-    yield i
+  *[Symbol.iterator](this: { [key: number]: number; length: number }) {
+    for (let i = 0; i < this.length; i++) {
+      yield this[i]
+    }
   }
-})
+}
+
 export class ValueError extends Error {
   constructor(message: string) {
     super(`ValueError: ${message}`)
   }
 }
+
 export function range(
   startOrStop: number,
   stop?: number,
   step: number = 1,
-): FiniteGenerator<number> {
+): FiniteIterable<number> & { [key: number]: number } {
   if (stop === undefined) {
-    return _range(startOrStop, 0, startOrStop, step)
+    return new _range(0, startOrStop, step)
   }
   if (step === 0) {
     throw new ValueError('Infinite Range')
   }
-  return _range(stop - startOrStop, startOrStop, stop, step)
+  return new _range(startOrStop, stop, step)
 }
