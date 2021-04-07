@@ -1,5 +1,6 @@
-import { FiniteIterable } from './zip'
+import { Sized } from './abs/Sized'
+ 
 
-export function len(it: FiniteIterable<any>) {
-  return it.length
+export function len(sized: Sized) {
+  return sized.length
 }

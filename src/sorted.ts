@@ -23,13 +23,6 @@ export function* _sorted<T>(
       arr[j] = arr[i]
       arr[i] = temp
     }
-    // for (const j of range(i + 1, len(arr))) {
-    //   if (cmp(key(arr[j]), key(arr[i])) < 0) {
-    //     const temp = arr[j]
-    //     arr[j] = arr[i]
-    //     arr[i] = temp
-    //   }
-    // }
 
     yield arr[i]
   }

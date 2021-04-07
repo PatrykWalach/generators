@@ -33,6 +33,7 @@ describe('any()', () => {
     })
   })
 
+  
   //   describe('for objects', () => {
   //     it('one false key', () => {
   //       expect(all({ 0: 'false'})).toStrictEqual(false)

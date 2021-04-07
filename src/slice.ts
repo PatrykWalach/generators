@@ -1,18 +1,14 @@
+import { Sequence } from './abs/Sequence'
 import { len } from './len'
 import { range } from './range'
-import { reversed } from './reversed'
-import { FiniteIterable, zip } from './zip'
+import { zip } from './zip'
 
-class _slice<T> implements FiniteIterable<T> {
+class _slice<T> extends Sequence<T> {
   length: number;
   [key: number]: T
 
-  constructor(
-    itble: FiniteIterable<T>,
-    start: number,
-    stop: number,
-    step: number,
-  ) {
+  constructor(itble: Sequence<T>, start: number, stop: number, step: number) {
+    super()
     this.length = len(range(start, stop, step))
 
     for (const [i, j] of zip(range(this.length), range(start, stop, step))) {
@@ -23,20 +19,14 @@ class _slice<T> implements FiniteIterable<T> {
       })
     }
   }
-
-  *[Symbol.iterator]() {
-    for (const i of range(this.length)) {
-      yield this[i]
-    }
-  }
 }
 
 export function slice<T>(
-  itble: FiniteIterable<T>,
+  itble: Sequence<T>,
   startOrStop: number,
   stop?: number,
   step: number = 1,
-): FiniteIterable<T> {
+): Sequence<T> {
   const [_start, _stop] = (stop === undefined
     ? [0, startOrStop]
     : [startOrStop, stop]

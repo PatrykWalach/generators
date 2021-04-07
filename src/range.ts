@@ -1,10 +1,12 @@
-import { FiniteIterable } from './zip'
+import { __reversed__ } from './abs/Reversible'
+import { Sequence } from './abs/Sequence'
+ 
 
-class _range implements FiniteIterable<number> {
-  length: number = 0;
-  [key: number]: number
+class Range extends Sequence<number> {
+  length: number
 
   constructor(start: number, stop: number, step: number) {
+    super()
     this.length = Math.ceil((stop - start) / step)
 
     for (let i = 0; i < this.length; i++) {
@@ -13,12 +15,6 @@ class _range implements FiniteIterable<number> {
           return start + step * i
         },
       })
-    }
-  }
-
-  *[Symbol.iterator](this: { [key: number]: number; length: number }) {
-    for (let i = 0; i < this.length; i++) {
-      yield this[i]
     }
   }
 }
@@ -33,12 +29,13 @@ export function range(
   startOrStop: number,
   stop?: number,
   step: number = 1,
-): FiniteIterable<number> & { [key: number]: number } {
+): Sequence<number> {
   if (stop === undefined) {
-    return new _range(0, startOrStop, step)
+    return new Range(0, startOrStop, step)
   }
   if (step === 0) {
     throw new ValueError('Infinite Range')
   }
-  return new _range(startOrStop, stop, step)
+
+  return new Range(startOrStop, stop, step)
 }
