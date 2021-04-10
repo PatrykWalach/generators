@@ -1,3 +1,3 @@
 export interface Sized {
-  length: number
+  readonly length: number
 }

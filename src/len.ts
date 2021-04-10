@@ -1,4 +1,4 @@
-import { Sized } from './abs/Sized'
+import { Sized } from '../abs/Sized'
  
 
 export function len(sized: Sized) {
