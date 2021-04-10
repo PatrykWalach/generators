@@ -1,4 +1,4 @@
-import { range, reversed, list } from '../../src'
+import { range, reversed } from '../../src'
 
 describe('reversed()', () => {
   it('reverses', () => {
@@ -12,7 +12,10 @@ describe('reversed()', () => {
     ])
   })
 
-  
+  it('reverses advanced range', () => {
+    expect([...reversed(range(2, 17, 3))]).toMatchObject([14, 11, 8, 5, 2])
+  })
+
   it('reverses range', () => {
     expect([...reversed(range(3))]).toMatchObject([2, 1, 0])
   })
