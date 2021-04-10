@@ -35,4 +35,14 @@ describe('sum', () => {
     const summed: string = sum([null, undefined, 12, 'b'], 'a')
     expect(summed).toStrictEqual('anullundefined12b')
   })
+  it('arr + arr', () => {
+    const summed: number[] = sum(
+      [
+        [1, 2],
+        [3, 4],
+      ],
+      [] as number[],
+    )
+    expect(summed).toMatchObject([1, 2, 3, 4])
+  })
 })
