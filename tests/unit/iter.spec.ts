@@ -1,4 +1,4 @@
-import { iter, next } from '../../src'
+import { iter, next, StopIteration } from '../../src'
 
 describe('iter', () => {
   it('for array', () => {
@@ -41,7 +41,7 @@ describe('iter', () => {
     expect(next(i)).toStrictEqual(3)
   })
 
-  it('for with sentinel parameter', () => {
+  it('for custom object with sentinel parameter', () => {
     class DoubleIt {
       start: number // = 1
 
@@ -62,5 +62,11 @@ describe('iter', () => {
     const numbers: number[] = [...iter(new DoubleIt(), 16)]
 
     expect(numbers).toMatchObject([2, 4, 8])
+  })
+})
+
+describe('next', () => {
+  it('throws StopIteration', () => {
+    expect(() => next(iter([]))).toThrowError(StopIteration)
   })
 })
