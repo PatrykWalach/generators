@@ -1,11 +1,13 @@
 import { iter, next } from './iter'
+import { ValueError } from './range'
 import { sorted } from './sorted'
+import { ignore, StopIteration } from './util'
 
 export function compare(a: unknown, b: unknown): number {
   if (typeof a === 'string' && typeof b === 'string') {
     return a.localeCompare(b)
   }
-  
+
   if (
     (typeof a === 'bigint' || typeof a === 'number') &&
     (typeof b === 'bigint' || typeof b === 'number')
@@ -17,35 +19,116 @@ export function compare(a: unknown, b: unknown): number {
     const aIt = iter(a)
     const bIt = iter(b)
 
-    let aV = next(aIt),
-      bV = next(bIt)
+    let aV, bV
+    let aThrown = false
 
-    for (
-      ;
-      aV !== undefined && bV !== undefined;
-      aV = next(aIt), bV = next(bIt)
-    ) {
+    while (true) {
+      try {
+        aV = next(aIt)
+      } catch (e) {
+        ignore(e, StopIteration)
+        aThrown = true
+      }
+
+      try {
+        bV = next(bIt)
+      } catch (e) {
+        ignore(e, StopIteration)
+        if (aThrown) {
+          return 0
+        }
+        return 1
+      }
+
+      if (aThrown) {
+        return -1
+      }
+
       if (compare(aV, bV) !== 0) {
         return compare(aV, bV)
       }
     }
-
-    if (aV === undefined && bV === undefined) {
-      return 0
-    }
-    if (aV === undefined) {
-      return -1
-    }
-    return 1
   }
 
   return 0
 }
 
-export function max<T>(itble: Iterable<T>, key = (v: T) => v) {
-  return next(sorted(itble, true, key))
+/**
+ *
+ * @param it
+ * @param options
+ * @throws {ValueError} Argument arg is an empty sequence.
+ */
+export function max<T, K>(
+  arg: Iterable<T>,
+  options?: {
+    key?: (v: T) => any
+    default: K
+  },
+): T | K
+export function max<T, K>(
+  arg: Iterable<T>,
+  options?: {
+    key: (v: T) => any
+  },
+): T
+export function max<T, K>(
+  arg: Iterable<T>,
+  {
+    key = (v) => v,
+    default: default_,
+  }: {
+    key?: (v: T) => any
+    default?: K
+  } = {},
+) {
+  try {
+    return next(sorted(arg, true, key))
+  } catch (e) {
+    ignore(e, StopIteration)
+    if (default_ === undefined) {
+      throw new ValueError('max() arg is an empty sequence')
+    }
+  }
+  return default_
 }
 
-export function min<T>(itble: Iterable<T>, key = (v: T) => v) {
-  return next(sorted(itble, key))
+/**
+ *
+ * @param it
+ * @param options
+ * @throws {ValueError} Argument arg is an empty sequence.
+ */
+export function min<T, K>(
+  it: Iterable<T>,
+  options?: {
+    key?: (v: T) => any
+    default: K
+  },
+): T | K
+export function min<T, K>(
+  it: Iterable<T>,
+  options?: {
+    key: (v: T) => any
+  },
+): T
+export function min<T, K>(
+  it: Iterable<T>,
+  {
+    key = (v) => v,
+    default: default_,
+  }: {
+    key?: (v: T) => any
+    default?: K
+  } = {},
+) {
+  try {
+    return next(sorted(it, key))
+  } catch (e) {
+    ignore(e, StopIteration)
+    if (default_ === undefined) {
+      throw new ValueError('min() arg is an empty sequence')
+    }
+  }
+  return default_
 }

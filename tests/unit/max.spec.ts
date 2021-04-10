@@ -1,4 +1,4 @@
-import { max } from '../../src'
+import { max, ValueError } from '../../src'
 
 describe('max()', () => {
   it('array', () => {
@@ -6,6 +6,19 @@ describe('max()', () => {
   })
 
   it('empty array', () => {
-    expect(max([])).toStrictEqual(undefined)
+    expect(() => max([])).toThrowError(ValueError)
+  })
+
+  it('empty array with default', () => {
+    const r = max([], { default: null })
+    expect(r).toStrictEqual(null)
+  })
+
+  it('key', () => {
+    const r = max(
+      [3, 2, 8, 5, 10, 6].map((value) => ({ value })),
+      { key: ({ value }) => value },
+    )
+    expect(r).toMatchObject({ value: 10 })
   })
 })
