@@ -1,21 +1,29 @@
 import { filter } from '../filter'
+import { ignore, IndexError } from '../util'
 import { len } from '../len'
 import { map } from '../map'
-import { range } from '../range'
+import { range, ValueError } from '../range'
 import { reversed } from '../reversed'
 import { sum } from '../sum'
 import { Collection } from './Collection'
+
 import { Reversible, __reversed__ } from './Reversible'
 
 export abstract class Sequence<T> implements Reversible<T>, Collection<T> {
-  [index: number]: T
-
-  abstract length: number
+  /**
+   * @throws {IndexError}
+   */
+  abstract get(index: number): T
+  abstract readonly length: number
 
   *[Symbol.iterator]() {
-    for (let i = 0; i < len(this); i++) {
-      const v = this[i]
-      yield v
+    try {
+      for (let i = 0; true; i++) {
+        const v = this.get(i)
+        yield v
+      }
+    } catch (e) {
+      ignore(e, IndexError)
     }
   }
 
@@ -30,29 +38,41 @@ export abstract class Sequence<T> implements Reversible<T>, Collection<T> {
 
   *[__reversed__](): Iterable<T> {
     for (const i of reversed(range(len(this)))) {
-      yield this[i]
+      yield this.get(i)
     }
   }
 
-  indexOf(value: T, start = 0) {
-    if (start < 0) {
+  /**
+   * @throws {ValueError} Argument value is not in list.
+   */
+  index(value: T, start = 0, stop: number | null = null) {
+    if (start !== null && start < 0) {
       start = Math.max(len(this) + start, 0)
     }
 
-    for (let i = start; i < len(this); i++) {
-      const v = this[i]
-      if (v === value) {
-        return i
+    if (stop !== null && stop < 0) {
+      stop += len(this)
+    }
+
+    for (let i = start; stop === null || i < stop; i++) {
+      try {
+        const v = this.get(i)
+        if (v === value) {
+          return i
+        }
+      } catch (e) {
+        ignore(e, IndexError)
       }
     }
-    return -1
+
+    throw new ValueError(`${value} is not in list`)
   }
 
   count(value: T) {
     return sum(
       map(
         filter(this, (v) => v === value),
-        (v) => 1,
+        () => 1,
       ),
     )
   }
