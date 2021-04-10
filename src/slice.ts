@@ -1,46 +1,62 @@
-import { Sequence } from './abs/Sequence'
-import { len } from './len'
-import { range } from './range'
-import { zip } from './zip'
+import { ValueError } from './range'
 
-class _slice<T> extends Sequence<T> {
-  length: number;
-  [key: number]: T
+export class Slice {
+  start: number
+  stop: number
+  step: number
 
-  constructor(itble: Sequence<T>, start: number, stop: number, step: number) {
-    super()
-    this.length = len(range(start, stop, step))
+  constructor(start: number, stop: number, step: number) {
+    this.start = start
+    this.stop = stop
+    this.step = step
+  }
 
-    for (const [i, j] of zip(range(this.length), range(start, stop, step))) {
-      Object.defineProperty(this, i, {
-        get() {
-          return itble[j]
-        },
-      })
+  /**
+   *
+   * @param len
+   * @throws {ValueError} Argument len should not be negative.
+   */
+  indices(len: number): [start: number, stop: number, stride: number] {
+    if (len < 0) {
+      throw new ValueError('length should not be negative')
     }
+    let { start, step, stop } = this
+
+    if (start < 0) {
+      start += len
+      if (start < 0) {
+        start = step < 0 ? -1 : 0
+      }
+    } else if (start >= len) {
+      start = step < 0 ? len - 1 : len
+    }
+
+    if (stop < 0) {
+      stop += len
+      if (stop < 0) {
+        stop = step < 0 ? -1 : 0
+      }
+    } else if (stop >= len) {
+      stop = step < 0 ? len - 1 : len
+    }
+
+    // if (step < 0) {
+    //   if (stop < start) {
+    // return (start - stop - 1) / -step + 1
+    // }
+    // } else {
+    //   if (start < stop) {
+    // return (stop - start - 1) / step + 1
+    //   }
+    // }
+
+    return [start, stop, step]
   }
 }
 
-export function slice<T>(
-  itble: Sequence<T>,
-  startOrStop: number,
-  stop?: number,
-  step: number = 1,
-): Sequence<T> {
-  const [_start, _stop] = (stop === undefined
-    ? [0, startOrStop]
-    : [startOrStop, stop]
-  )
-    .map((v) => negative(v, itble.length))
-    .map((v) => minmax(v, itble.length))
-
-  return new _slice(itble, _start, _stop, step)
-}
-
-function minmax(v: number, max: number) {
-  return Math.max(0, Math.min(v, max))
-}
-
-function negative(v: number, l: number) {
-  return v < 0 ? l + v : v
+export function slice(startOrStop: number, stop?: number, step: number = 1) {
+  if (stop === undefined) {
+    return new Slice(0, startOrStop, step)
+  }
+  return new Slice(startOrStop, stop, step)
 }

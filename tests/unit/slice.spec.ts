@@ -1,15 +1,59 @@
-import { slice } from '../../src'
+import { slice, ValueError } from '../../src'
 
 describe('slice()', () => {
-  it('negative', () => {
-    const arr = 'Python'
+  describe('step > 0', () => {
+    it('start + length < 0', () => {
+      expect(slice(-12, 0).indices(5)).toMatchObject([0, 0, 1])
+    })
 
-    expect([...slice(arr, -1, -4, -1)]).toMatchObject(['n', 'o', 'h'])
-    expect([...slice(arr, -1, -5, -2)]).toMatchObject(['n', 'h'])
+    it('start + length >= 0', () => {
+      expect(slice(-4, 0).indices(5)).toMatchObject([1, 0, 1])
+    })
+
+    it('start >= length', () => {
+      expect(slice(6, 0).indices(5)).toMatchObject([5, 0, 1])
+    })
+
+    it('stop + length < 0', () => {
+      expect(slice(-12).indices(5)).toMatchObject([0, 0, 1])
+    })
+
+    it('stop + length >= 0', () => {
+      expect(slice(-4).indices(5)).toMatchObject([0, 1, 1])
+    })
+
+    it('stop >= length', () => {
+      expect(slice(6).indices(5)).toMatchObject([0, 5, 1])
+    })
   })
-  it('out of bounds', () => {
-    const arr = ['P', 'y', 't', 'h', 'o', 'n']
-    expect([...slice(arr, -1000)]).toMatchObject([])
-    expect([...slice(arr, 1000)]).toMatchObject(arr)
+
+  describe('step < 0', () => {
+    it('start + length < 0', () => {
+      expect(slice(-12, 0, -1).indices(5)).toMatchObject([-1, 0, -1])
+    })
+
+    it('start + length >= 0', () => {
+      expect(slice(-4, 0, -1).indices(5)).toMatchObject([1, 0, -1])
+    })
+
+    it('start >= length', () => {
+      expect(slice(6, 0, -1).indices(5)).toMatchObject([4, 0, -1])
+    })
+
+    it('stop + length < 0', () => {
+      expect(slice(-12, undefined, -1).indices(5)).toMatchObject([0, -1, -1])
+    })
+
+    it('stop + length >= 0', () => {
+      expect(slice(-4, undefined, -1).indices(5)).toMatchObject([0, 1, -1])
+    })
+
+    it('stop >= length', () => {
+      expect(slice(6, undefined, -1).indices(5)).toMatchObject([0, 4, -1])
+    })
+  })
+
+  it('length < 0', () => {
+    expect(() => slice(2, -4, -3).indices(-5)).toThrowError(ValueError)
   })
 })
