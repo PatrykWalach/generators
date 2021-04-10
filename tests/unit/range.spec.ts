@@ -1,4 +1,4 @@
-import { range, Range, reversed, ValueError } from '../../src'
+import { range, Range, reversed, slice, ValueError } from '../../src'
 
 describe('range', () => {
   it('infinite', () => {
@@ -27,6 +27,13 @@ describe('range', () => {
   it('decreasing', () => {
     expect([...range(2, -5, -3)]).toMatchObject([2, -1, -4])
   })
+
+  it('is sliceable', () => {
+    const sliced = range(2, 15, 3).get(slice(1, 15, 2))
+    expect(sliced).toBeInstanceOf(Range)
+    expect([...sliced]).toMatchObject([5, 11])
+  })
+
   it('is reversible', () => {
     expect([...reversed(range(2, 15, 3))]).toMatchObject([14, 11, 8, 5, 2])
   })
