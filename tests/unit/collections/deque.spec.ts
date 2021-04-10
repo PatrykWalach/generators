@@ -1,4 +1,4 @@
-import { deque, slice, str, IndexError } from '../../../src'
+import { deque, slice, IndexError } from '../../../src'
 
 describe('deque()', () => {
   it('constructor assigns length', () => {
@@ -68,15 +68,6 @@ describe('deque()', () => {
 
       expect([...l]).toMatchObject([4, 5, 1, 2, 3])
     })
-  })
-
-  it('is sliceable', () => {
-    const list = deque('Python')
-
-    expect(str('').join(list.get(slice(3)))).toStrictEqual('Pyt')
-    expect(str('').join(list.get(slice(1, 6, 2)))).toStrictEqual('yhn')
-    expect(str('').join(list.get(slice(-1, -4, -1)))).toStrictEqual('noh')
-    expect(str('').join(list.get(slice(-1, -5, -2)))).toStrictEqual('nh')
   })
 
   // describe('splice', () => {

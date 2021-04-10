@@ -37,7 +37,7 @@ class Node<T> {
 }
 
 export class DeQue<T> extends MutableSequence<T> {
-  #length: number = 0
+  #length = 0
   #head: Head<T>
   #tail: Tail<T>
   maxLen: number | null;
