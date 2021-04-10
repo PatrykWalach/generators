@@ -1,5 +1,6 @@
 import { __reversed__ } from './abs/Reversible'
 import { Sequence } from './abs/Sequence'
+import { IndexError, ValueError } from './util'
  
 
 class Range extends Sequence<number> {
@@ -19,11 +20,6 @@ class Range extends Sequence<number> {
   }
 }
 
-export class ValueError extends Error {
-  constructor(message: string) {
-    super(`ValueError: ${message}`)
-  }
-}
 
 export function range(
   startOrStop: number,

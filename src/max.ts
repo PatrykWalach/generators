@@ -1,7 +1,7 @@
 import { iter, next } from './iter'
-import { ValueError } from './range'
+
 import { sorted } from './sorted'
-import { ignore, StopIteration } from './util'
+import { ignore, StopIteration, ValueError } from './util'
 
 export function compare(a: unknown, b: unknown): number {
   if (typeof a === 'string' && typeof b === 'string') {

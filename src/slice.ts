@@ -1,4 +1,4 @@
-import { ValueError } from './range'
+import { ValueError } from './util'
 
 export class Slice {
   start: number

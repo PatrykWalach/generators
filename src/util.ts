@@ -16,4 +16,6 @@ export class IndexError extends BaseError('IndexError') {}
 
 export class StopIteration extends BaseError('StopIteration') {}
 
-export class KeyError extends BaseError('KeyError ') {}
+export class KeyError extends BaseError('KeyError') {}
+
+export class ValueError extends BaseError('ValueError') {}
