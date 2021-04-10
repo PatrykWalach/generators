@@ -1,4 +1,4 @@
-import { sum } from '../../src'
+import { deque, sum, DeQue } from '../../src'
 
 describe('sum', () => {
   it('array', () => {
@@ -35,6 +35,7 @@ describe('sum', () => {
     const summed: string = sum([null, undefined, 12, 'b'], 'a')
     expect(summed).toStrictEqual('anullundefined12b')
   })
+
   it('arr + arr', () => {
     const summed: number[] = sum(
       [
@@ -44,5 +45,18 @@ describe('sum', () => {
       [] as number[],
     )
     expect(summed).toMatchObject([1, 2, 3, 4])
+  })
+
+  it('deque + arr', () => {
+    const summed: DeQue<number> = sum(
+      [
+        [1, 2],
+        [3, 4],
+      ],
+      deque<number>(),
+    )
+
+    expect(summed).toBeInstanceOf(DeQue)
+    expect([...summed]).toMatchObject([1, 2, 3, 4])
   })
 })
