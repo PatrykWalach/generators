@@ -1,5 +1,13 @@
-import { compare } from '../../src'
-import { sorted } from '../../src'
+import { len, quicksort, sorted } from '../../src'
+
+describe('quicksort', () => {
+  it('numbers', () => {
+    const arr = [4, 12, 1]
+    expect([
+      ...quicksort(arr, 0, len(arr) - 1, (a, b) => a - b),
+    ]).toMatchObject([1, 4, 12])
+  })
+})
 
 describe('sorted()', () => {
   it('string', () => {
@@ -11,20 +19,22 @@ describe('sorted()', () => {
 
   it('array', () => {
     const vowels = ['e', 'a', 'u', 'o', 'i']
-    expect([...sorted(vowels)]).toMatchObject([...vowels].sort((a, b) => a.localeCompare(b)))
+    expect([...sorted(vowels)]).toMatchObject(
+      [...vowels].sort((a, b) => a.localeCompare(b)),
+    )
   })
 
   describe('descending', () => {
     it('string', () => {
       const string = 'Javascript'
-      expect([...sorted(string, true)]).toMatchObject(
+      expect([...sorted(string, { reverse: true })]).toMatchObject(
         [...string].sort((a, b) => b.localeCompare(a)),
       )
     })
 
     it('array', () => {
       const vowels = ['e', 'a', 'u', 'o', 'i']
-      expect([...sorted(vowels, true)]).toMatchObject(
+      expect([...sorted(vowels, { reverse: true })]).toMatchObject(
         [...vowels].sort((a, b) => b.localeCompare(a)),
       )
     })
@@ -38,7 +48,7 @@ describe('sorted()', () => {
         [4, 1],
         [1, 3],
       ]
-      expect([...sorted(arr, ([, v]) => v)]).toMatchObject(
+      expect([...sorted(arr, { key: ([, v]) => v })]).toMatchObject(
         [...arr].sort(([, a], [, b]) => a - b),
       )
     })
@@ -54,7 +64,7 @@ describe('sorted()', () => {
 
       const key = ([, mark, age]: Student) => [100 - mark, age]
 
-      expect([...sorted(arr, key)]).toMatchObject([
+      expect([...sorted(arr, { key })]).toMatchObject([
         ['Jimmy', 90, 22],
         ['Terence', 75, 12],
         ['David', 75, 20],
@@ -64,4 +74,3 @@ describe('sorted()', () => {
     })
   })
 })
-
