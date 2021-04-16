@@ -19,3 +19,7 @@ export class StopIteration extends BaseError('StopIteration') {}
 export class KeyError extends BaseError('KeyError') {}
 
 export class ValueError extends BaseError('ValueError') {}
+
+export function callable<A extends unknown[], R>(ctor: new (...args: A) => R) {
+  return (...args: A): R => new ctor(...args)
+}
