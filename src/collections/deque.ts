@@ -1,12 +1,10 @@
-import { MutableSequence } from '../abs/MutableSequence'
-
-import { __reversed__ } from '../abs/Reversible'
-import { Sized } from '../abs/Sized'
 import { map } from '..'
+import { MutableSequence } from '../abs/MutableSequence'
+import { __reversed__ } from '../abs/Reversible'
 import { len } from '../len'
 import { range } from '../range'
 import { Slice } from '../slice'
-import { ignore, IndexError } from '../util'
+import { callable, ignore, IndexError } from '../util'
 
 class Tail<T> {
   prev: Head<T> | Node<T>
@@ -23,7 +21,6 @@ class Head<T> {
     this.next = new Tail(this)
   }
 }
-
 class Node<T> {
   prev: Head<T> | Node<T>
   value: T
@@ -36,7 +33,7 @@ class Node<T> {
   }
 }
 
-export class DeQue<T> extends MutableSequence<T> {
+export class Deque<T> extends MutableSequence<T> {
   #length = 0
   #head: Head<T>
   #tail: Tail<T>
@@ -44,7 +41,7 @@ export class DeQue<T> extends MutableSequence<T> {
 
   [index: number]: T
 
-  constructor(values: Sized & Iterable<T>, maxLen?: number) {
+  constructor(values: Iterable<T> = [], maxLen?: number) {
     super()
 
     this.maxLen = maxLen === undefined ? null : maxLen
@@ -68,6 +65,7 @@ export class DeQue<T> extends MutableSequence<T> {
         return node
       }
     }
+
     throw new IndexError()
   }
 
@@ -82,6 +80,7 @@ export class DeQue<T> extends MutableSequence<T> {
         return node
       }
     }
+
     throw new IndexError()
   }
 
@@ -89,6 +88,7 @@ export class DeQue<T> extends MutableSequence<T> {
     if (index < 0) {
       index += len(this)
     }
+
     if (index < len(this) / 2) {
       return this.getNodeLeft(index)
     }
@@ -96,13 +96,13 @@ export class DeQue<T> extends MutableSequence<T> {
     return this.getNodeRight(index)
   }
 
-  get(slice: Slice): DeQue<T>
+  get(slice: Slice): Deque<T>
   get(index: number): T
-  get(indexOrSlice: number | Slice) {
+  get(indexOrSlice: number | Slice): Deque<T> | T {
     if (indexOrSlice instanceof Slice) {
-      return new DeQue([
-        ...map(range(...indexOrSlice.indices(len(this))), (i) => this.get(i)),
-      ])
+      return deque(
+        map(range(...indexOrSlice.indices(len(this))), (i) => this.get(i)),
+      )
     }
     return this.getNode(indexOrSlice).value
   }
@@ -120,6 +120,7 @@ export class DeQue<T> extends MutableSequence<T> {
   set(index: number, value: T) {
     this.getNode(index).value = value
   }
+
   /**
    * @throws {IndexError} Deque already at its maximum size.
    */
@@ -182,6 +183,7 @@ export class DeQue<T> extends MutableSequence<T> {
         while (n-- > 0) {
           this.appendLeft(this.pop())
         }
+
         return
       }
       while (n++ < 0) {
@@ -244,7 +246,6 @@ export class DeQue<T> extends MutableSequence<T> {
 
   extendLeft(values: Iterable<T>) {
     if (values === this) {
-      //TODO: replace  [...values] with list(values) after implementing list
       values = [...values]
     }
     for (const v of values) {
@@ -253,4 +254,4 @@ export class DeQue<T> extends MutableSequence<T> {
   }
 }
 
-export const deque = <T>(values: Sized & Iterable<T> = []) => new DeQue(values)
+export const deque = callable(Deque)
