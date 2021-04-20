@@ -1,14 +1,22 @@
-import { ValueError } from './util'
+import { callable, ValueError } from './util'
 
 export class Slice {
   start: number
   stop: number
   step: number
 
-  constructor(start: number, stop: number, step: number) {
+  constructor(start: number, stop?: number, step = 1) {
+    this.step = step
+
+    if (stop === undefined) {
+      this.start = 0
+      this.stop = start
+
+      return
+    }
+
     this.start = start
     this.stop = stop
-    this.step = step
   }
 
   /**
@@ -54,9 +62,4 @@ export class Slice {
   }
 }
 
-export function slice(startOrStop: number, stop?: number, step: number = 1) {
-  if (stop === undefined) {
-    return new Slice(0, startOrStop, step)
-  }
-  return new Slice(startOrStop, stop, step)
-}
+export const slice = callable(Slice)
