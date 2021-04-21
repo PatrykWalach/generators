@@ -1,21 +1,20 @@
- 
 import { iter, next } from './iter'
 import { ignore, StopIteration } from './util'
 
 export type M<T> = T extends Iterable<infer K> ? K : unknown
 
-export type F<T extends any[], R> = (
+export type F<T extends unknown[], R> = (
   ...vs: {
     [K in keyof T]: M<T[K]>
   }
 ) => R
 
 export function* map<T extends Iterable<unknown>[], R>(
-  ...itbles: [...T, F<T, R>]
-): Iterable<R> {
-  const fn = itbles.pop() as F<T, R>
+  ...iterables: [...T, F<T, R>]
+): Generator<R> {
+  const fn = iterables.pop() as F<T, R>
 
-  const its = ((itbles as unknown) as T).map((itble) => iter(itble))
+  const its = ((iterables as unknown) as T).map((iterable) => iter(iterable))
 
   try {
     let values = its.map(next)
