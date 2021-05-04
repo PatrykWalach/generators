@@ -41,15 +41,15 @@ describe('slice()', () => {
     })
 
     it('stop + length < 0', () => {
-      expect(slice(-12, undefined, -1).indices(5)).toMatchObject([0, -1, -1])
+      expect(slice(-12, undefined, -1).indices(5)).toMatchObject([-1, -1, -1])
     })
 
     it('stop + length >= 0', () => {
-      expect(slice(-4, undefined, -1).indices(5)).toMatchObject([0, 1, -1])
+      expect(slice(-4, undefined, -1).indices(5)).toMatchObject([1, -1, -1])
     })
 
     it('stop >= length', () => {
-      expect(slice(6, undefined, -1).indices(5)).toMatchObject([0, 4, -1])
+      expect(slice(6, undefined, -1).indices(5)).toMatchObject([4, -1, -1])
     })
   })
 
