@@ -5,18 +5,35 @@ export class Slice {
   stop: number
   step: number
 
-  constructor(start: number, stop?: number, step = 1) {
-    this.step = step
-
-    if (stop === undefined) {
-      this.start = 0
-      this.stop = start
-
-      return
+  constructor(
+    start?: null | number,
+    stop?: null | number,
+    step?: null | number,
+  ) {
+    if (step === 0) {
+      throw new ValueError('slice step cannot be zero')
     }
 
-    this.start = start
+    if (stop === undefined && step === undefined) {
+      stop = start
+      start = null
+    }
+
+    if (step === undefined || step === null) {
+      step = 1
+    }
+
+    if (start === undefined || start === null) {
+      start = step < 0 ? Infinity : 0
+    }
+
+    if (stop === undefined || stop === null) {
+      stop = step < 0 ? -Infinity : Infinity
+    }
+
+    this.step = step
     this.stop = stop
+    this.start = start
   }
 
   /**
