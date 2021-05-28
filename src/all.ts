@@ -1,6 +1,6 @@
 import { map } from './map'
 
-export function all(it: Iterable<unknown>): boolean {
+export const all = (it: Iterable<unknown>): boolean => {
   for (const v of it) {
     if (v) {
       continue
