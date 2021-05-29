@@ -35,33 +35,33 @@ export class Range extends Sequence<number> {
     throw new IndexError('range index out of range')
   }
 
-  constructor(start: number, stop: number, step: number) {
+  /**
+   *
+   * @param start
+   * @param stop
+   * @param step
+   * @throws {ValueError} Argument step must not be zero.
+   */
+  constructor(start: number, stop?: number, step = 1) {
     super()
-    this.length = Math.ceil((stop - start) / step)
+    if (step === 0) {
+      throw new ValueError('range() arg 3 must not be zero')
+    }
+
+    this.#step = step
+
+    if (stop === undefined) {
+      stop = start
+      start = 0
+    }
+
+    this.#length = Math.ceil((stop - start) / step)
     this.#start = start
     this.#stop = stop
-    this.#step = step
   }
 
-  [__reversed__]() {
-    return iter(this.get(slice(-1, -Infinity, -1)))
-  }
+
+
 }
 
-/**
- *
- * @param start
- * @param stop
- * @param step
- * @throws {ValueError} Argument step must not be zero.
- */
-export function range(start: number, stop?: number, step: number = 1) {
-  if (stop === undefined) {
-    return new Range(0, start, step)
-  }
-  if (step === 0) {
-    throw new ValueError('range() arg 3 must not be zero')
-  }
-
-  return new Range(start, stop, step)
-}
+export const range = callable(Range)
