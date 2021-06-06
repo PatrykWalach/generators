@@ -1,6 +1,11 @@
 import { map } from './map'
+import { pipe } from './pipe'
 
-export const all = (it: Iterable<unknown>): boolean => {
+interface All {
+  (it: Iterable<unknown>): boolean
+}
+
+export const all: All = (it) => {
   for (const v of it) {
     if (v) {
       continue
@@ -12,6 +17,14 @@ export const all = (it: Iterable<unknown>): boolean => {
   return true
 }
 
-export function any(it: Iterable<unknown>): boolean {
-  return !all(map(it, (v) => !v))
+interface Any {
+  (it: Iterable<unknown>): boolean
+}
+
+export const any: Any = (it) => {
+  return !pipe(
+    it,
+    map((v) => !v),
+    all,
+  )
 }
