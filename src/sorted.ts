@@ -1,5 +1,5 @@
 import { len } from './len'
-import { compare } from './max'
+import { swap } from './util'
 
 export function partition<T>(
   arr: T[],
@@ -11,15 +11,11 @@ export function partition<T>(
   let i = lo
   for (let j = lo; j < hi; j++) {
     if (cmp(arr[j], pivot) < 0) {
-      const [ni, nj] = [arr[j], arr[i]]
-      arr[i] = ni
-      arr[j] = nj
+      swap(arr, i, j)
       i++
     }
   }
-  const [ni, nhi] = [arr[hi], arr[i]]
-  arr[i] = ni
-  arr[hi] = nhi
+  swap(arr, i, hi)
   return i
 }
 
