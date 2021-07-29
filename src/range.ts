@@ -1,37 +1,51 @@
+import { iter } from './iter'
+import { slice, Slice, SliceString } from './slice'
+import { callable, IndexError, ValueError } from './util'
+
 import { __reversed__ } from './abs/Reversible'
 import { Sequence } from './abs/Sequence'
-import { IndexError, ValueError } from './util'
-import { iter } from './iter'
 import { len } from './len'
-import { Slice, slice } from './slice'
 
 export class Range extends Sequence<number> {
-  length: number
+  #length: number
   #start: number
   #stop: number
   #step: number
 
+  get length(): number {
+    return this.#length
+  }
+
+  private calculate(index: number): number {
+    return this.#start + this.#step * index
+  }
+
   /**
    * @throws {IndexError} Range index out of range.
    */
-  get(slice: Slice): Range
+  get(slice: Slice | SliceString): Range
   get(index: number): number
-  get(indexOrSlice: number | Slice) {
-    if (indexOrSlice instanceof Slice) {
-      const [start, stop, step] = indexOrSlice.indices(len(this))
+  get(index: number | Slice | SliceString): Range | number {
+    if (index instanceof Slice) {
+      const [start, stop, step] = index.indices(len(this))
       return range(
-        this.get(start),
-        this.#start + this.#step * stop,
-        step * this.#step,
+        this.calculate(start),
+        this.calculate(stop),
+        this.#step * step,
       )
     }
-    const v = this.#start + this.#step * indexOrSlice
+    if (typeof index === 'string') {
+      return this.get(Slice.from(index))
+    }
+    const v = this.calculate(index)
+
     if (
       (this.#step > 0 && v < this.#stop) ||
       (this.#step < 0 && v > this.#stop)
     ) {
       return v
     }
+
     throw new IndexError('range index out of range')
   }
 
@@ -60,8 +74,10 @@ export class Range extends Sequence<number> {
     this.#stop = stop
   }
 
-
-
+  [__reversed__](): Iterable<number> {
+    // return slice({ step: -1 })(this.toArrayLike())
+    return this.get('::-1')
+  }
 }
 
 export const range = callable(Range)
