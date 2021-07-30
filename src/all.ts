@@ -24,12 +24,14 @@ export const all = curry(all_) as All
 interface Any {
   (it: Iterable<unknown>): boolean
 
+  (): (it: Iterable<unknown>) => boolean
 }
 
-export const any: Any = (it) => {
-  return !pipe(
+const any_ = (it: Iterable<unknown>) =>
+  !pipe(
     it,
-    map((v) => !v),
-    all,
+    map((v: unknown) => !v),
+    all(),
   )
-}
+
+export const any = curry(any_) as Any
