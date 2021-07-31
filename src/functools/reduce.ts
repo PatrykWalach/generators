@@ -1,19 +1,27 @@
+import { curry } from '../curry'
 import { iter, next } from '../iter'
 
-export function reduce<T>(
+interface Reduce {
+  <T>(iterable: Iterable<T>, reducer: (acc: T, v: T) => T): T
+  <T, A>(
+    iterable: Iterable<T>,
+    reducer: (acc: A, v: T) => A,
+    initialValue?: A,
+  ): A
+
+  <T>(reducer: (acc: T, v: T) => T): (iterable: Iterable<T>) => T
+  <T, A>(reducer: (acc: A, v: T) => A, initialValue?: A): (
+    iterable: Iterable<T>,
+  ) => A
+}
+
+type Reducer<A, T> = (acc: A, v: T) => A
+
+export const reduce_ = <T, A>(
   iterable: Iterable<T>,
-  reducer: (acc: T, v: T) => T,
-): T
-export function reduce<T, A>(
-  iterable: Iterable<T>,
-  reducer: (acc: A, v: T) => A,
+  reducer: Reducer<A | T, T>,
   initialValue?: A,
-): A
-export function reduce<T, A>(
-  iterable: Iterable<T>,
-  reducer: (acc: A | T, v: T) => A | T,
-  initialValue?: A,
-): A | T {
+) => {
   const it = iter(iterable)
   let acc = initialValue === undefined ? next(it) : initialValue
   for (const v of it) {
@@ -21,3 +29,5 @@ export function reduce<T, A>(
   }
   return acc
 }
+
+export const reduce = curry(reduce_) as Reduce
