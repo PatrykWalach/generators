@@ -70,6 +70,11 @@ describe('deque()', () => {
     })
   })
 
+  it('extend self', () => {
+    const list = deque('Python')
+    list.extend(list)
+    expect(str('').join(list)).toStrictEqual('PythonPython')
+  })
   // describe('splice', () => {
   //   it('removes', () => {
   //     const l = deque([1, 2, 3, 4, 5])
