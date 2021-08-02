@@ -1,23 +1,31 @@
-import { StopIteration } from "./util"
+import { StopIteration } from './util'
 
- 
+interface Iter {
+  <T>(it: Iterable<T>, sentinel?: T): Generator<T, void>
+}
 
-export function* iter<T>(it: Iterable<T>, sentinel?: T): Generator<T, void> {
+export const iter: Iter = function* (it, sentinel) {
   for (const v of it) {
     if (v === sentinel) {
       return
     }
+
     yield v
   }
 }
 
-/**
- * @throws {StopIteration}
- */
-export function next<T, R>(it: Iterator<T, R>) {
+interface Next {
+  /**
+   * @throws {StopIteration}
+   */
+  <T, R>(it: Iterator<T, R>): T
+}
+
+export const next: Next = (it) => {
   const n = it.next()
   if (n.done) {
     throw new StopIteration()
   }
+
   return n.value
 }
