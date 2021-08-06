@@ -1,7 +1,6 @@
-export const ignore = (e: Error, class_: Function) => {
-  if (e instanceof class_) {
-    return
-  }
+export const ignore = (e: Error, ...classes: (new () => void)[]): void => {
+  if (classes.some((class_) => e instanceof class_)) return
+
   throw e
 }
 
