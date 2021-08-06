@@ -28,7 +28,5 @@ interface Swap {
 }
 
 export const swap: Swap = (arr, a, b) => {
-  const previousB = arr[b]
-  arr[b] = arr[a]
-  arr[a] = previousB
+  ;[arr[a], arr[b]] = [arr[b], arr[a]]
 }
