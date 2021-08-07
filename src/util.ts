@@ -4,7 +4,7 @@ export const ignore = (e: Error, ...classes: (new () => void)[]): void => {
   throw e
 }
 
-export const BaseError = (name: string) =>
+export const BaseError = (name: string): new (message?: unknown) => Error =>
   class extends Error {
     constructor(message: unknown = '') {
       super(`${name}${message ? `: ${message}` : ''}`)
